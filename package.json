@@ -7,6 +7,7 @@
     "@fontsource/bitter": "^5.2.6",
     "@fontsource/fira-code": "^5.2.5",
     "@fontsource/fira-sans": "^5.2.5",
+    "@fontsource/merriweather": "^5.2.6",
     "@monaco-editor/react": "^4.7.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

@@ -107,7 +107,7 @@ const EditorPage: React.FC = () => {
             <Tabs defaultActiveKey="in" activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
                 <TabPane tab="Input" key="in">
                     <TextArea
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', fontFamily: 'Fira Code, Consolas, monospace' }}
                         value={input}
                         allowClear
                         onChange={(e) => setInput(e.target.value)}
@@ -115,7 +115,7 @@ const EditorPage: React.FC = () => {
                 </TabPane>
                 <TabPane tab="Output" key="out">
                     <TextArea
-                        style={{ width: '100%', caretColor: "transparent" }}
+                        style={{ width: '100%', fontFamily: 'Fira Code, Consolas, monospace', caretColor: "transparent" }}
                         value={output}
                         readOnly
                     />
