@@ -25,7 +25,7 @@ import "@fontsource/bitter";
 import "@fontsource/merriweather";
 import { GithubFilled, MailFilled, LinkedinFilled } from '@ant-design/icons';
 import NotFoundPage from './pages/NotFoundPage';
-import { EMAIL_URL, LINKEDIN_URL, SOURCE_URL } from './constants/addresses';
+import { EMAIL_URL, LINKEDIN_URL, SOURCE_URL } from './constants/socialAddresses';
 
 const { Paragraph, Link } = Typography;
 const { Header, Content, Footer} = Layout;

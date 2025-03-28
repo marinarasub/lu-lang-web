@@ -3,7 +3,7 @@ import { Menu, Space } from "antd";
 import { CSSProperties, useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { SOURCE_URL } from "../constants/addresses";
+import { SOURCE_URL } from "../constants/socialAddresses";
 
 function Navbar() {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);

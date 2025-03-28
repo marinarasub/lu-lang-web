@@ -4,6 +4,7 @@ import { Select, Button, Tabs, Grid, Row, Col, Splitter, Space } from 'antd';
 import { CaretRightFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
 import Editor from '@monaco-editor/react';
 import TextArea from 'antd/es/input/TextArea';
+import { EDITOR_SERVICE_URL } from '../constants/apiAddresses';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -60,15 +61,61 @@ const EditorPage: React.FC = () => {
     }
     );
 
-    const handleBuild = () => {
-        // Implement build and run logic here
-        setOutput('Output will be displayed here...');
+    const handleBuild = async () => {
+        if (sourceEditorRef.current) {
+            const sourceCode = sourceEditorRef.current.getValue();
+            await fetch(EDITOR_SERVICE_URL + '/api/v1/build', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify({ input: sourceCode }),
+            }).then((response) => {
+                const status = response.status;
+                return response.json().then((body) => ({ status, body }));
+            }).then(({ status, body }) => {
+                if (status !== 201) {
+                    throw new Error(body.errors?.map((e: any) => e.message).join('\n'));
+                }
+                const output = body.result?.output;
+                const build = body.result?.build;
+                transpilerEditorRef.current?.setValue(build);
+                setOutput(output);
+                //setActiveTab('out');
+            }).catch((error) => {
+                setOutput(error.message);
+            });
+        }
     };
 
-    const handleRun = () => {
-        // Implement build and run logic here
-        setOutput('Output will be displayed here...');
-        setActiveTab('out');
+    const handleRun = async () => {
+        if (transpilerEditorRef.current) {
+            setActiveTab('out');
+            setOutput('');
+            const transpiledCode = transpilerEditorRef.current.getValue();
+            await fetch(EDITOR_SERVICE_URL + '/api/v1/run', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', },
+                body: JSON.stringify({ input: transpiledCode }),
+            }).then((response) => {
+                const status = response.status;
+                return response.json().then((body) => ({ status, body }));
+            }).then(({ status, body }) => {
+                if (status !== 201) {
+                    throw new Error(body.errors?.map((e: any) => e.message).join('\n'));
+                }
+                const id = body.id;
+                if (typeof id !== 'string') {
+                    throw new Error('Invalid response from server');
+                }
+                const ws = new WebSocket(EDITOR_SERVICE_URL + '/api/v1/run/' + id);
+                ws.onmessage = (data) => {
+                    const message = data.toString();
+                    setOutput(output + message);
+                }
+                ws.onclose = () => {} // TODO allow rerun
+            }).catch((error) => {
+                setOutput(error.message);
+            });
+        }
     };
 
     return (

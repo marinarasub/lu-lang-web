@@ -7,10 +7,10 @@ const { Title, Text } = Typography;
 const example = {
     href: '/blog',
     title: "It's Coming Along...",
+    date: '2025-03-28',
+    author: 'David',
     avatar: '',
     thumbnail: '',
-    description:
-        'Short description for this post',
     content:
         'Don\'t look! I\'m under construction!',
 };
@@ -26,7 +26,7 @@ const BlogPage: React.FC = () => (
     <div style={{ padding: "20px 40px", }}>
         <Space direction='vertical' style={{ width: "100%" }}>
             <Title level={1} style={{ fontSize: '32pt', margin: '0.75em 0 0.2em 0' }}>
-                Posts
+                Latest
             </Title>
             <List
                 itemLayout="vertical"
@@ -56,7 +56,7 @@ const BlogPage: React.FC = () => (
                         <List.Item.Meta
                             avatar={<Avatar src={item.avatar ? item.avatar : null} icon={<UserOutlined />} />}
                             title={<a href={item.href}>{item.title}</a>}
-                            description={item.description}
+                            description={`By ${item.author ? item.author : "Unknown"} | Published ${item.date ? item.date : "Unknown Date"}`}
                         />
                         {item.content}
                     </List.Item>
