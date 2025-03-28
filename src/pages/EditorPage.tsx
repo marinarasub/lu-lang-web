@@ -106,10 +106,10 @@ const EditorPage: React.FC = () => {
                 if (typeof id !== 'string') {
                     throw new Error('Invalid response from server');
                 }
-                const ws = new WebSocket(EDITOR_SERVICE_URL + '/api/v1/run/' + id);
-                ws.onmessage = (data) => {
-                    const message = data.toString();
-                    setOutput(output + message);
+                const ws = new WebSocket(EDITOR_SERVICE_URL + '/run?id=' + id);
+                ws.onmessage = (event) => {
+                    const message = event.data.toString();
+                    setOutput((prevOutput) => prevOutput + message);
                 }
                 ws.onclose = () => {} // TODO allow rerun
             }).catch((error) => {
