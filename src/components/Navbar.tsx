@@ -3,6 +3,7 @@ import { Menu, Space } from "antd";
 import { CSSProperties, useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { SOURCE_URL } from "../constants/addresses";
 
 function Navbar() {
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -50,10 +51,10 @@ function Navbar() {
                 <NavLink to='/docs'>Documentation</NavLink>
             </Menu.Item>
             <Menu.Item key='source'>
-                <NavLink to='/'>Source</NavLink>
+                <NavLink to={SOURCE_URL}>Source</NavLink>
             </Menu.Item>
-            <Menu.Item key='contact'>
-                <NavLink to='/contact'>Contact</NavLink>
+            <Menu.Item key='blog'>
+                <NavLink to='/blog'>Blog</NavLink>
             </Menu.Item>
         </Menu>
     </nav>

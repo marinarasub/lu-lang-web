@@ -10,7 +10,6 @@ function NotFoundPage() {
     }
     return (
         <div style={{ padding: "20px", textAlign: "center", alignItems: 'center' }}>
-            <meta name='prerender-status-code' content='404' />
             <Space direction="vertical" style={{ width: "100%" }}>
                 <Title level={1} style={{fontSize: '144pt', margin: '0.33em 0 0 0'}}>
                     404

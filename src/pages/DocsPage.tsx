@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import type { MenuProps } from 'antd';
-import { Button, Menu } from 'antd';
+import { Button, Menu, Space } from 'antd';
+import { Typography } from 'antd';
+
+const { Text, Title } = Typography;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -37,24 +40,23 @@ const items: MenuItem[] = [
 ];
 
 const DocsPage: React.FC = () => {
+    const menuDiv = <div>
+        <Menu
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            mode="inline"
+            theme="dark"
+            inlineCollapsed={false}
+            items={items}
+            style={{ height: '100vh' }}
+        />
+    </div>;
+
     return (
-        <div style={{ display: 'flex' }}>
-            <div>
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    theme="dark"
-                    inlineCollapsed={false}
-                    items={items}
-                    style={{ height: '100vh' }}
-                />
-            </div>
-            <div style={{ padding: "20px", textAlign: "center", flex: 1 }}>
-                <h1>Documentation</h1>
-                <p>Welcome to the documentation page. Here you will find all the information you need to get started.</p>
-                {/* Add more documentation content here */}
-            </div>
+        <div style={{ padding: "20px", textAlign: "center", }}>
+            <Space direction="vertical" style={{ width: "100%" }}>
+                <Title level={3} style={{marginTop: '100px'}} >Come back later!</Title>
+            </Space>
         </div>
     );
 };
