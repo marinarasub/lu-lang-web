@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "lu-lang-web",
+  "name": "lu-lang-web",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,14 +8,19 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "lu-logo@0,25x.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "256x256"
     },
     {
-      "src": "logo512.png",
+      "src": "lu-logo@0,5x.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "lu-logo@01x.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
     }
   ],
   "start_url": ".",
