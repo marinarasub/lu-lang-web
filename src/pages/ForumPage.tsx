@@ -1,11 +1,11 @@
 import React from 'react';
-import { Avatar, Empty, Image, Layout, List, Space, Tag, Typography, DatePicker, Row, Col } from 'antd';
+import { Avatar, Layout, List, Space, Tag, Typography, DatePicker, Row, Col } from 'antd';
 import { LikeOutlined, MessageOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 import { useState } from 'react';
 
-const { Title, Text, Paragraph, Link } = Typography;
-const { Header, Content, Footer } = Layout;
+const { Title, Text } = Typography;
+const { Header, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -53,8 +53,9 @@ function makeDescription(item: ForumPost) {
 }
 
 const SearchBar: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [searchTerm, setSearchTerm] = useState(''); // eslint-disable-line @typescript-eslint/no-unused-vars
+    const [sortOrder, setSortOrder] = useState('asc'); // eslint-disable-line @typescript-eslint/no-unused-vars
+    
 
     const handleSearch = (value: string) => {
         setSearchTerm(value);

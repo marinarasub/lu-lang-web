@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { Menu, Space } from "antd";
-import { CSSProperties, useState } from "react";
+import { Menu } from "antd";
+import { useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { SOURCE_URL } from "../constants/socialAddresses";
+// import { SOURCE_URL } from "../constants/socialAddresses";
 
 const navLinks = [
     { key: 'editor', label: 'Editor', to: '/editor' },

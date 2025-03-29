@@ -8,7 +8,7 @@ import './HomePage.css';
 import { EXAMPLE_LIST } from "../constants/examples";
 import { EARLY_DEV_NOTICE, ONE_LINER, Pillar, PILLARS } from "../constants/aboutLu";
 
-const { Text, Title, Link, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 function makePillarCard(pillar: Pillar) {
     return (        

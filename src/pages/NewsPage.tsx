@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Typography, Card, Row, Col } from 'antd';
+import { Layout, Typography, Card, Row, Col } from 'antd';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;

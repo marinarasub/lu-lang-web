@@ -1,12 +1,10 @@
 import {
   Button,
   ConfigProvider,
-  DatePicker,
   Divider,
   Layout,
   Space,
-  Typography,
-  version
+  Typography
 } from "antd";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -25,7 +23,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import { EMAIL_URL, LINKEDIN_URL, SOURCE_URL } from './constants/socialAddresses';
 import NewsPage from './pages/NewsPage';
 
-const { Paragraph, Link } = Typography;
+const { Paragraph } = Typography;
 const { Header, Content, Footer} = Layout;
 
 function App() {
