@@ -1,6 +1,3 @@
-import logo from './logo.svg';
-import './App.css';
-
 import {
   Button,
   ConfigProvider,
@@ -13,11 +10,11 @@ import {
 } from "antd";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import AboutPage from "./pages/AboutPage"
+import AboutPage from "./pages/HomePage"
 import EditorPage from "./pages/EditorPage"
 import Navbar from './components/Navbar';
 import DocsPage from './pages/DocsPage';
-import BlogPage from './pages/BlogPage';
+import ForumPage from './pages/ForumPage';
 
 import "@fontsource/fira-code";
 import "@fontsource/fira-sans";
@@ -26,6 +23,7 @@ import "@fontsource/merriweather";
 import { GithubFilled, MailFilled, LinkedinFilled } from '@ant-design/icons';
 import NotFoundPage from './pages/NotFoundPage';
 import { EMAIL_URL, LINKEDIN_URL, SOURCE_URL } from './constants/socialAddresses';
+import NewsPage from './pages/NewsPage';
 
 const { Paragraph, Link } = Typography;
 const { Header, Content, Footer} = Layout;
@@ -42,16 +40,15 @@ function App() {
       <BrowserRouter>
         <Layout style={{minHeight: '100vh'}} >
           <Header style={{ top: 0, width: "100%", margin: 0 }}>
-            <div className="navbar" style={{ minHeight: "100%" }}>
-              <Navbar />
-            </div>
+            <Navbar />
           </Header>
           <Content>
             <Routes>
               <Route path='/' element={<AboutPage />} />
               <Route path='/editor' element={<EditorPage />} />
               <Route path='/docs' element={<DocsPage />} />
-              <Route path='/blog' element={<BlogPage />} />
+              <Route path='/forum' element={<ForumPage />} />
+              <Route path='/news' element={<NewsPage />} />
               <Route path='*' element={<NotFoundPage />} />
             </Routes>
           </Content>
