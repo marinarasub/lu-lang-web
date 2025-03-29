@@ -6,7 +6,7 @@ const { Title } = Typography;
 
 const NewsPage: React.FC = () => {
     const newsData = [
-        { title: 'News 1', description: 'Description for news 1' },
+        { title: 'News 1', description: "Okay, you got me. This place doesn't exist yet" },
         { title: 'News 2', description: 'Description for news 2' },
         { title: 'News 3', description: 'Description for news 3' },
     ];

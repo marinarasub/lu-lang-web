@@ -8,7 +8,7 @@ import { SOURCE_URL } from "../constants/socialAddresses";
 const navLinks = [
     { key: 'editor', label: 'Editor', to: '/editor' },
     { key: 'docs', label: 'Documentation', to: '/docs' },
-    { key: 'source', label: 'Source', to: SOURCE_URL },
+    //{ key: 'source', label: 'Source', to: SOURCE_URL },
     { key: 'forum', label: 'Forum', to: '/forum' },
     { key: 'news', label: 'News', to: '/news' },
 ]

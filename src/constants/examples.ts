@@ -1,4 +1,4 @@
-// in case fetch fails, back up code examples
+// TODO: later fetch examples from a server
 
 export interface Example {
     title: string;
@@ -62,4 +62,6 @@ EXAMPLE_LIST.forEach((example) => {
     EXAMPLE_MAP.set(example.key, example);
 });
 
-export { EXAMPLE_MAP, EXAMPLE_LIST };
+const DEFAULT_EXAMPLE = EXAMPLE_LIST[0];
+
+export { EXAMPLE_MAP, EXAMPLE_LIST, DEFAULT_EXAMPLE };

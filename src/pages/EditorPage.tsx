@@ -1,14 +1,105 @@
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as monaco from 'monaco-editor';
-import { Select, Button, Tabs, Grid, Row, Col, Splitter, Space } from 'antd';
+import { Select, Button, Tabs, Grid, Row, Col, Splitter, Space, Modal, Form } from 'antd';
 import { CaretRightFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
 import Editor from '@monaco-editor/react';
 import TextArea, { TextAreaRef } from 'antd/es/input/TextArea';
 import { EDITOR_SERVICE_URL } from '../constants/apiAddresses';
-import { EXAMPLE_LIST, EXAMPLE_MAP } from '../constants/examples';
+import { DEFAULT_EXAMPLE, EXAMPLE_LIST, EXAMPLE_MAP } from '../constants/examples';
+const parse = require('shell-quote/parse');
 
 const { Option } = Select;
 const { TabPane } = Tabs;
+
+// actually most settings should be for lu transpiler (which aren't impl yet), since lu should produce runnable code
+// the only things here is maybe compiler with debug info (but we probaby add a seperate debug button later)
+// <h4>C Optimization Level</h4>
+// <Select
+//     defaultValue="O2"
+//     style={{ width: '100%' }}
+//     onChange={(value) => console.log('Optimization Level:', value)}
+// >
+//     <Option value="O0">O0 (No Optimization)</Option>
+//     <Option value="O1">O1 (Optimize)</Option>
+//     <Option value="O2">O2 (Default Optimization)</Option>
+//     <Option value="O3">O3 (High Optimization)</Option>
+// </Select>
+// <h4>C Warnings</h4>
+// <Select
+//     defaultValue="all"
+//     style={{ width: '100%' }}
+//     onChange={(value) => console.log('Warnings Level:', value)}
+// >
+//     <Option value="none">None</Option>
+//     <Option value="all">All</Option>
+//     <Option value="strict">Strict</Option>
+// </Select>
+/* <h4>Compiler Flags</h4>
+<TextArea
+    placeholder="Enter compiler flags (space-separated)"
+    rows={2}
+    onChange={(e) => console.log('Compiler Flags:', e.target.value)}
+/> */
+/* <h4>C Compiler</h4>
+<Select
+    defaultValue="gcc"
+    style={{ width: '100%' }}
+    onChange={(value) => console.log('Selected Compiler:', value)}
+>
+    <Option value="gcc">GCC</Option>
+    <Option value="clang">Clang</Option>
+</Select> */
+
+interface Settings {
+    args: string;
+}
+
+interface SettingsModalProps {
+    visible: boolean;
+    onClose: () => void;
+    settings: Settings;
+    updateSettings: (settings: Settings) => void;
+}
+
+const SettingsModal = ({ visible, onClose, settings, updateSettings }: SettingsModalProps) => {
+    const [form] = Form.useForm();
+
+    useEffect(() => {
+        form.setFieldsValue(settings);
+    }, [visible, settings, form]);
+
+    const handleOk = async () => {
+        await form.validateFields().then((values) => {
+            updateSettings(values);
+            onClose();
+        });
+    };
+
+    const handleCancel = () => {
+        onClose(); // Close the modal
+    };
+
+    return (
+        <Modal
+            title="Settings"
+            closable
+            open={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width="80%"
+        >
+            <Form form={form} layout="vertical">
+                <Form.Item
+                    label="Command Line Arguments"
+                    name="args"
+                    rules={[{ required: false, }]}
+                >
+                    <TextArea placeholder="Enter compiler arguments (space-separated)" rows={1} style={{fontFamily: 'Consolas, monospace'}} />
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
+}
 
 interface EditorOutputProps {
     build: string;
@@ -73,23 +164,32 @@ const EditorPage: React.FC = () => {
     const [build, setBuild] = useState('');
     const [terminal, setTerminal] = useState('');
     const [activeTab, setActiveTab] = useState('build');
-
-    const sourceEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>(null);
-    const transpilerEditorRef = useRef<monaco.editor.IStandaloneCodeEditor>(null);
+    const [running, setRunning] = useState(false);
+    const [building, setBuilding] = useState(false);
+    const [needsRebuild, setNeedsRebuild] = useState(true);
+    
+    const sourceEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+    const transpilerEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
     
     const wsRef = useRef<WebSocket | null>(null);
+
+    const onChangeSourceEditor = () => {
+        setNeedsRebuild(true);
+    }
 
     const sourceEditor = <Editor
         width="100%"
         height="400px"
         theme="vs-dark"
-        value={"# Write your code here"}
+        value={DEFAULT_EXAMPLE.code}
+        language='lu'
         options={{automaticLayout: false, fontFamily: 'Fira Code, Consolas, monospace'}}
         onMount={(editor, monaco) => {
             sourceEditorRef.current = editor
             editor.focus();
             editor.layout();
         }}
+        onChange={onChangeSourceEditor}
     />;
     const transpilerEditor = <Editor
         width="100%"
@@ -125,7 +225,9 @@ const EditorPage: React.FC = () => {
 
     const handleBuild = async () => {
         setActiveTab('build');
+        setBuild('');
         if (sourceEditorRef.current) {
+            setBuilding(true);
             const sourceCode = sourceEditorRef.current.getValue();
             await fetch(EDITOR_SERVICE_URL + '/api/v1/build', {
                 method: 'POST',
@@ -142,21 +244,30 @@ const EditorPage: React.FC = () => {
                 const build = body.result?.build;
                 transpilerEditorRef.current?.setValue(build);
                 setBuild(output);
+                setNeedsRebuild(false);
+                setBuilding(false);
             }).catch((error) => {
                 setBuild(error.message);
+                setBuilding(false);
             });
         }
     };
 
     const handleRun = async () => {
+        if (needsRebuild) {
+            await handleBuild();
+        }
+        setActiveTab('terminal');
+        setTerminal('');
         if (transpilerEditorRef.current) {
-            setActiveTab('terminal');
-            setTerminal('');
+            setRunning(true);   
             const transpiledCode = transpilerEditorRef.current.getValue();
+            const body = JSON.stringify({ input: transpiledCode, args: parse(settings.args) as string[] });
+            console.log('sending run request:', body);
             await fetch(EDITOR_SERVICE_URL + '/api/v1/run', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
-                body: JSON.stringify({ input: transpiledCode }),
+                body,
             }).then((response) => {
                 const status = response.status;
                 return response.json().then((body) => ({ status, body }));
@@ -181,16 +292,25 @@ const EditorPage: React.FC = () => {
                 }
                 ws_id.onclose = () => {
                     wsRef.current = null;
+                    setRunning(false);
                 } // TODO allow rerun
             }).catch((error) => {
                 setTerminal((prevOutput) => prevOutput + error.message);
+                setRunning(false);
             });
         }
     };
 
+    const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
+    const [settings, setSettings] = useState<Settings>({ args: '' });
+
     const onSettings = () => {
-        alert('Settings clicked');
-    }
+        setIsSettingsModalVisible(true);
+    };
+
+    const onSettingsClose = () => {
+        setIsSettingsModalVisible(false);
+    };
 
     const onExampleChange = (value: string) => {
         if (sourceEditorRef.current) {
@@ -201,6 +321,12 @@ const EditorPage: React.FC = () => {
         }
     }
 
+    const onExampleClear = () => {
+        if (sourceEditorRef.current) {
+            sourceEditorRef.current.setValue('');
+        }
+    }
+    
     const onTerminalInput = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
             setInput((prevInput) => prevInput + '\n');
@@ -226,17 +352,30 @@ const EditorPage: React.FC = () => {
     return (
         <div style={{ padding: '20px' }}>
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                <Space>
-                    <p>Example:</p>
-                    <Select showSearch allowClear placeholder='none' onChange={onExampleChange}  style={{ width: 120 }}>
-                        {EXAMPLE_LIST.map((example) => (
-                            <Option key={example.key} value={example.key}>{example.title}</Option>
-                        ))}
-                    </Select>
-                </Space>
+                <Select 
+                    showSearch
+                    allowClear 
+                    placeholder='Select an example' 
+                    defaultValue={DEFAULT_EXAMPLE.key}
+                    onChange={onExampleChange} 
+                    onClear={onExampleClear}
+                    style={{ width: '180px' }}
+                >
+                    {EXAMPLE_LIST.map((example) => (
+                        <Option key={example.key} value={example.key}>{example.title}</Option>
+                    ))}
+                </Select>
                 <Button type="default" onClick={onSettings} icon={<SettingFilled />}>
                     Settings
                 </Button>
+                <SettingsModal 
+                    visible={isSettingsModalVisible} 
+                    onClose={onSettingsClose} 
+                    settings={settings} 
+                    updateSettings={(newSettings) => {
+                        setSettings(newSettings);
+                    }}
+                />
             </Space>
             <div style={{ display: 'flex', marginTop: '12px', height: '100%', minHeight: '300px' }}>
                 <Splitter style={{ width: '100%', height: '100%' }} onResize={onResizeSplitterPane}>
@@ -249,8 +388,27 @@ const EditorPage: React.FC = () => {
                 </Splitter>
             </div>
             <Space style={{ marginTop: '20px' }}>
-                <Button variant='solid' onClick={handleRun} color='green' icon={<CaretRightFilled />}>Run</Button>
-                <Button type="primary" onClick={handleBuild} style={{margin: "0 10px"}} icon={<ToolFilled />}>Build</Button>
+                <Button 
+                    variant='solid' 
+                    onClick={handleRun} 
+                    disabled={running || building}
+                    loading={running}
+                    style={{margin: "0 10px"}} 
+                    color='green' 
+                    icon={<CaretRightFilled />}
+                >
+                    Run
+                </Button>
+                <Button 
+                    type="primary" 
+                    onClick={handleBuild} 
+                    disabled={building}
+                    loading={building}
+                    style={{margin: "0 10px"}} 
+                    icon={<ToolFilled />}
+                >
+                    Build
+                </Button>
             </Space>
             <EditorOutput 
                 build={build} 

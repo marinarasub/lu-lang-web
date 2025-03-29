@@ -15,13 +15,14 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.126",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "antd": "^5.24.5",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18",
+    "react-dom": "^18",
     "react-router-dom": "^7.4.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
+    "shell-quote": "^1.8.2",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -48,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/shell-quote": "^1.7.5"
   }
 }

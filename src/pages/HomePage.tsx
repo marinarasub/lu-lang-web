@@ -6,7 +6,7 @@ import { Carousel } from "antd";
 
 import './HomePage.css';
 import { EXAMPLE_LIST } from "../constants/examples";
-import PILLARS, { Pillar } from "../constants/pillars";
+import { EARLY_DEV_NOTICE, ONE_LINER, Pillar, PILLARS } from "../constants/aboutLu";
 
 const { Text, Title, Link, Paragraph } = Typography;
 
@@ -62,7 +62,7 @@ function makeExampleCard(example: any) {
     );
 }
 
-function About() {
+function HomePage() {
     // idk how to set same height in carousel so just ensure these are all same height (pad to max lines?)
 
     return (
@@ -72,11 +72,10 @@ function About() {
                     Welcome to <span style={{color: 'rgb(36, 52, 119)'}} >Lu</span>
                 </Title>
                 <Paragraph style={{fontSize: "14pt"}}>
-                    Rapid prototyping meets the safety and performance of static typing. <br></br>
-                    Simple and elegant. No keywords, just pure code.
+                    {ONE_LINER}
                 </Paragraph>
                 <Alert
-                    message="Lu is currently in pre-alpha development. It is only available as a demo and may change significantly. We welcome your feedback!"
+                    message={EARLY_DEV_NOTICE}
                     type="warning"
                     showIcon
                     style={{ fontSize: "16px", margin: "0 auto", textAlign: "left" }}
@@ -110,4 +109,4 @@ function About() {
     );
 }
 
-export default About;
+export default HomePage;
