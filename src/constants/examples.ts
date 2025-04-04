@@ -33,7 +33,7 @@ i < MAX ! {
         $print("Buzz")
     ~(ismod3 | ismod5) ?
         $print(i)
-    $print("\n")
+    $print("\\n")
     i = i + 1
 } : i
 `;
