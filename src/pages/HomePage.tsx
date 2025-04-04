@@ -5,7 +5,7 @@ import { RightOutlined } from "@ant-design/icons";
 import { Carousel } from "antd";
 
 import './HomePage.css';
-import { EXAMPLE_LIST } from "../constants/examples";
+import { PRIME_EXAMPLE_LIST } from "../constants/examples";
 import { EARLY_DEV_NOTICE, ONE_LINER, Pillar, PILLARS } from "../constants/aboutLu";
 
 const { Title, Paragraph } = Typography;
@@ -82,7 +82,7 @@ function HomePage() {
                     className="half-width"
                 />
                 <Carousel autoplay={{dotDuration: true}} arrows style={{margin: "0 auto"}} className="half-width">
-                    {EXAMPLE_LIST.map((example) => {
+                    {PRIME_EXAMPLE_LIST.map((example) => {
                         return (
                             <div key={example.key} style={{width: "100%", height: "100%"}}>
                                 {makeExampleCard(example)}

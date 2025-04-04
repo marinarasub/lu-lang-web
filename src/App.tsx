@@ -1,8 +1,10 @@
 import {
   Button,
+  Col,
   ConfigProvider,
   Divider,
   Layout,
+  Row,
   Space,
   Typography
 } from "antd";
@@ -53,17 +55,23 @@ function App() {
           <Divider />
           <Footer style={{ margin: 'auto', textAlign: 'center', height: "100%", width: "100%" }}>
             <Space direction='vertical' size='middle'>
-              <Space direction='horizontal' size='small'>
-                <Button type="link" href={SOURCE_URL} target="_blank" rel="noopener noreferrer" icon={<GithubFilled />}>
-                  Website Source
-                </Button>
-                <Button type="link" href={EMAIL_URL} target="_blank" rel="noopener noreferrer" icon={<MailFilled />}>
-                  Email Me
-                </Button>
-                <Button type="link" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" icon={<LinkedinFilled />}>
-                  LinkedIn
-                </Button>
-              </Space>
+              <Row gutter={[16, 16]}>
+                <Col xs={24} md={8}>
+                  <Button block type="link" href={SOURCE_URL} target="_blank" rel="noopener noreferrer" icon={<GithubFilled />}>
+                    Website Source
+                  </Button>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Button block type="link" href={EMAIL_URL} target="_blank" rel="noopener noreferrer" icon={<MailFilled />}>
+                    Email Me
+                  </Button>
+                </Col>
+                <Col xs={24} md={8}>
+                  <Button block type="link" href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" icon={<LinkedinFilled />}>
+                    LinkedIn
+                  </Button>
+                </Col>
+              </Row>
               <Paragraph>By David Lu © 2025</Paragraph>
             </Space>
           </Footer>
